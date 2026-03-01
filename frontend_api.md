@@ -93,6 +93,24 @@ Authorization: Bearer <access_token>
 
 ---
 
+### GET /users/check-email?email={email}
+
+Проверка уникальности email. Авторизация **не требуется**.
+
+| Параметр | Тип    | Обязательный | Описание            |
+| -------- | ------ | ------------ | ------------------- |
+| `email`  | string | да           | Email для проверки  |
+
+**Ответ 200:**
+
+```json
+{ "is_unique": true }
+```
+
+`is_unique: true` — email свободен, `false` — уже занят.
+
+---
+
 ### GET /users/search?q={query}&by={field}
 
 Поиск пользователей по подстроке. Авторизация **не требуется**.

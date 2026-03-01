@@ -32,6 +32,16 @@ async def create_user(
     return user
 
 
+@router.get("/check-email")
+async def check_email(
+    session: SessionDep,
+    email: str = Query(),
+) -> dict[str, bool]:
+    """Проверка уникальности email. Возвращает is_unique: true если email свободен."""
+    result = await session.execute(select(User).where(User.email == email))
+    return {"is_unique": result.scalar_one_or_none() is None}
+
+
 @router.get("/search", response_model=list[UserRead])
 async def search_users(
     session: SessionDep,

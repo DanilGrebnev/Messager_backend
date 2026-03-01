@@ -287,6 +287,21 @@ Authorization: Bearer <access_token>
 
 > Требуется **авторизация**.
 
+### Как работают сообщения — сводка для фронтенда
+
+| Действие | Способ | Описание |
+| -------- | ------ | -------- |
+| Загрузить историю | `GET /chats/{chat_id}/messages` | HTTP-запрос, возвращает все сообщения с полем `is_read` |
+| Отправить сообщение | WebSocket `{ chat_id, text }` | Отправитель получает `{ status: "sent", message_id }` |
+| Получить новое сообщение | WebSocket (входящее) | Приходит `{ id, chat_id, sender_id, text, is_system, created_at }` |
+| Отметить прочитанным | WebSocket `{ type: "read", chat_id, message_id }` | Обновляет позицию прочтения в БД |
+| Узнать о прочтении | WebSocket (входящее) | Приходит `{ type: "read_update", chat_id, user_id, last_read_message_id }` |
+| Системное сообщение | WebSocket (входящее) | Приходит `{ id, chat_id, sender_id: null, text, is_system: true, created_at }` |
+
+Подробные форматы WebSocket-событий — в разделе [WebSocket](#websocket) ниже.
+
+---
+
 ### GET /chats/{chat_id}/messages
 
 История сообщений чата (отсортировано по `created_at`).

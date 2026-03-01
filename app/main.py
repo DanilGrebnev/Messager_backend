@@ -3,6 +3,7 @@
 Здесь создаётся экземпляр приложения, подключаются middleware и все роутеры.
 """
 
+import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
@@ -17,12 +18,17 @@ from app.message.router import router as message_router
 from app.message.websocket import router as ws_router
 from app.user.routers import router as user_router
 
+logger = logging.getLogger(__name__)
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Автоматический запуск миграций Alembic при старте приложения."""
-    alembic_cfg = Config("alembic.ini")
-    command.upgrade(alembic_cfg, "head")
+    try:
+        alembic_cfg = Config("alembic.ini")
+        command.upgrade(alembic_cfg, "head")
+    except Exception:
+        logger.exception("Alembic migration failed")
     yield
 
 

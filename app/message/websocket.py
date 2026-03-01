@@ -94,13 +94,14 @@ async def websocket_endpoint(websocket: WebSocket, token: str) -> None:
 
             async with async_session() as session:
                 # Проверяем, что отправитель — участник чата
-                participant = await session.execute(
+                cp_result = await session.execute(
                     select(ChatParticipant).where(
                         ChatParticipant.chat_id == chat_id,
                         ChatParticipant.user_id == user_id,
                     )
                 )
-                if participant.scalar_one_or_none() is None:
+                cp = cp_result.scalar_one_or_none()
+                if cp is None:
                     await websocket.send_json({"error": "You are not in this chat"})
                     continue
 
@@ -113,6 +114,12 @@ async def websocket_endpoint(websocket: WebSocket, token: str) -> None:
                 session.add(message)
                 await session.commit()
                 await session.refresh(message)
+
+                # Отправитель прочитал все сообщения до своего включительно
+                if cp.last_read_message_id is None or message.id > cp.last_read_message_id:
+                    cp.last_read_message_id = message.id
+                    session.add(cp)
+                    await session.commit()
 
                 # Получаем список участников для рассылки
                 participants_result = await session.execute(

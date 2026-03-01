@@ -13,11 +13,14 @@ dependencies = [
     "pydantic-settings>=2.13.1",
     "pyjwt>=2.11.0",
     "python-dotenv>=1.2.1",
+    "redis>=7.2.1",
     "sqlmodel>=0.0.37",
     "uvicorn>=0.41.0",
+    "websockets>=16.0",
 ]
 
 [dependency-groups]
 dev = [
     "types-pyjwt>=1.7.1",
+    "types-redis>=4.6.0.20241004",
 ]

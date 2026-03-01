@@ -5,7 +5,9 @@ from sqlalchemy import engine_from_config, pool
 from sqlmodel import SQLModel 
 
 from app.config import settings
-from app.user.models import User # pyright: ignore[reportUnusedImport]
+from app.user.models import User  # pyright: ignore[reportUnusedImport]
+from app.message.models import Message  # pyright: ignore[reportUnusedImport]
+from app.chat.models import Chat, ChatParticipant  # pyright: ignore[reportUnusedImport]
 
 config = context.config
 

@@ -1,11 +1,14 @@
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
+    # DATABASE 
     POSTGRES_USER: str 
     POSTGRES_PASSWORD:str 
     POSTGRES_DB: str 
     DB_HOST: str = 'localhost'
     DB_PORT: int = 5432
+    # JWT
+    JWT_SECRET: str
 
     @property
     def db_url(self) -> str:

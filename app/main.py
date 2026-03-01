@@ -47,12 +47,12 @@ app.add_middleware(
     allow_headers=["Authorization", "Content-Type"],
 )
 
-# Подключение роутеров: каждый модуль регистрирует свои эндпоинты
-app.include_router(user_router)
-app.include_router(auth_router)
-app.include_router(chat_router)
-app.include_router(message_router)
-app.include_router(ws_router)
+api_prefix = "/api"
+app.include_router(user_router, prefix=api_prefix)
+app.include_router(auth_router, prefix=api_prefix)
+app.include_router(chat_router, prefix=api_prefix)
+app.include_router(message_router, prefix=api_prefix)
+app.include_router(ws_router, prefix=api_prefix)
 
 
 @app.get("/")

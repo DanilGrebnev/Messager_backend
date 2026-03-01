@@ -12,7 +12,7 @@ Authorization: Bearer <access_token>
 
 ## Auth
 
-### POST /auth/login
+### POST /api/auth/login
 
 Вход в систему. Возвращает пару JWT-токенов.
 
@@ -39,7 +39,7 @@ Authorization: Bearer <access_token>
 
 ---
 
-### POST /auth/refresh
+### POST /api/auth/refresh
 
 Обновление пары токенов по действующему refresh-токену (ротация).
 
@@ -67,7 +67,7 @@ Authorization: Bearer <access_token>
 
 ## User
 
-### POST /users/registration
+### POST /api/users/registration
 
 Регистрация нового пользователя. Авторизация **не требуется**.
 
@@ -93,7 +93,7 @@ Authorization: Bearer <access_token>
 
 ---
 
-### GET /users/check-email?email={email}
+### GET /api/users/check-email?email={email}
 
 Проверка уникальности email. Авторизация **не требуется**.
 
@@ -111,7 +111,7 @@ Authorization: Bearer <access_token>
 
 ---
 
-### GET /users/search?q={query}&by={field}
+### GET /api/users/search?q={query}&by={field}
 
 Поиск пользователей по подстроке. Авторизация **не требуется**.
 
@@ -131,7 +131,7 @@ Authorization: Bearer <access_token>
 
 ---
 
-### GET /users/{user_id}
+### GET /api/users/{user_id}
 
 Получение пользователя по ID. Авторизация **не требуется**.
 
@@ -153,7 +153,7 @@ Authorization: Bearer <access_token>
 
 > Все эндпоинты чатов требуют **авторизацию** (заголовок `Authorization: Bearer <access_token>`).
 
-### GET /chats
+### GET /api/chats
 
 Список всех чатов текущего пользователя.
 
@@ -187,7 +187,7 @@ Authorization: Bearer <access_token>
 
 ---
 
-### POST /chats
+### POST /api/chats
 
 Создание чата.
 
@@ -215,7 +215,7 @@ Authorization: Bearer <access_token>
 
 ---
 
-### PATCH /chats/{chat_id}
+### PATCH /api/chats/{chat_id}
 
 Обновление названия чата. Только **admin**.
 
@@ -233,7 +233,7 @@ Authorization: Bearer <access_token>
 
 ---
 
-### POST /chats/{chat_id}/members
+### POST /api/chats/{chat_id}/members
 
 Добавление участника. Только **admin**.
 
@@ -251,7 +251,7 @@ Authorization: Bearer <access_token>
 
 ---
 
-### DELETE /chats/{chat_id}/members/{user_id}
+### DELETE /api/chats/{chat_id}/members/{user_id}
 
 Удаление участника из чата. Только **admin**. Админ не может удалить себя.
 
@@ -261,7 +261,7 @@ Authorization: Bearer <access_token>
 
 ---
 
-### POST /chats/{chat_id}/leave
+### POST /api/chats/{chat_id}/leave
 
 Выход текущего пользователя из чата. Админ **не может** покинуть чат.
 
@@ -277,7 +277,7 @@ Authorization: Bearer <access_token>
 
 ---
 
-### POST /chats/{chat_id}/read
+### POST /api/chats/{chat_id}/read
 
 Отметка сообщений как прочитанных. Обновляет позицию только вперёд.
 
@@ -309,7 +309,7 @@ Authorization: Bearer <access_token>
 
 | Действие | Способ | Описание |
 | -------- | ------ | -------- |
-| Загрузить историю | `GET /chats/{chat_id}/messages` | HTTP-запрос, возвращает все сообщения с полем `is_read` |
+| Загрузить историю | `GET /api/chats/{chat_id}/messages` | HTTP-запрос, возвращает все сообщения с полем `is_read` |
 | Отправить сообщение | WebSocket `{ chat_id, text }` | Отправитель получает `{ status: "sent", message_id }` |
 | Получить новое сообщение | WebSocket (входящее) | Приходит `{ id, chat_id, sender_id, text, is_system, created_at }` |
 | Отметить прочитанным | WebSocket `{ type: "read", chat_id, message_id }` | Обновляет позицию прочтения в БД |
@@ -320,7 +320,7 @@ Authorization: Bearer <access_token>
 
 ---
 
-### GET /chats/{chat_id}/messages
+### GET /api/chats/{chat_id}/messages
 
 История сообщений чата (отсортировано по `created_at`).
 
@@ -361,11 +361,11 @@ Authorization: Bearer <access_token>
 
 ## WebSocket
 
-### ws://localhost:8000/ws?token={access_token}
+### ws://localhost:8000/api/ws?token={access_token}
 
 Подключение для обмена сообщениями в реальном времени. Токен передаётся как query-параметр.
 
-`access_token` — это значение из ответа `POST /auth/login` (или `POST /auth/refresh`), поле `access_token`.
+`access_token` — это значение из ответа `POST /api/auth/login` (или `POST /api/auth/refresh`), поле `access_token`.
 
 При невалидном токене соединение закрывается с кодом `4001`.
 

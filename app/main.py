@@ -3,6 +3,10 @@
 Здесь создаётся экземпляр приложения, подключаются middleware и все роутеры.
 """
 
+import subprocess
+from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -12,7 +16,15 @@ from app.message.router import router as message_router
 from app.message.websocket import router as ws_router
 from app.user.routers import router as user_router
 
-app = FastAPI(title="Messager API")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+    """Автоматический запуск миграций Alembic при старте приложения."""
+    subprocess.run(["alembic", "upgrade", "head"], check=True)
+    yield
+
+
+app = FastAPI(title="Messager API", lifespan=lifespan)
 
 # CORS — разрешаем запросы с любого домена (для разработки).
 # В production стоит указать конкретные origins.

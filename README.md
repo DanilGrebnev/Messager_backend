@@ -40,13 +40,7 @@ docker compose -f docker-compose.dev.yml up
 uv sync
 ```
 
-3. Применить миграции:
-
-```bash
-uv run alembic upgrade head
-```
-
-4. Запустить приложение:
+3. Запустить приложение (миграции применяются автоматически при старте):
 
 ```bash
 uv run uvicorn app.main:app --reload

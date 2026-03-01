@@ -3,10 +3,11 @@
 Здесь создаётся экземпляр приложения, подключаются middleware и все роутеры.
 """
 
-import subprocess
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
+from alembic import command
+from alembic.config import Config
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -20,7 +21,8 @@ from app.user.routers import router as user_router
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Автоматический запуск миграций Alembic при старте приложения."""
-    subprocess.run(["alembic", "upgrade", "head"], check=True)
+    alembic_cfg = Config("alembic.ini")
+    command.upgrade(alembic_cfg, "head")
     yield
 
 
